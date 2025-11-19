@@ -1,44 +1,49 @@
 # Bash Automation Toolkit
 
-Utility scripts I lean on for day-to-day DevOps work. Each script is designed to be:
+Portable scripts for day-to-day DevOps tasks. Every helper is:
 
-- **Idempotent** – safe to rerun
-- **Env-var driven** – no hard-coded secrets
-- **CI friendly** – pipes logs, exits on failure
+- **Idempotent** – re-runs safely
+- **Configurable** – driven by env vars / flags
+- **CI ready** – exits on failure, streams logs
 
-> Run `chmod +x *.sh` before using any script.
+Run `chmod +x *.sh` before executing anything locally or in CI.
 
 ---
 
-## Quick Index
+## Script Map
 
-| Script | Description | Key Env Vars / Flags |
+| Script | What it solves | Inputs to set |
 | --- | --- | --- |
-| `k8s-health-check.sh` | Prints pod/cronjob/node status across namespaces with color-coded output. | `-c` kubectl context, `-n` namespace list |
-| `ci-build.sh` | Builds and pushes Docker images with optional Syft SBOM. | `REGISTRY`, `DOCKERFILE`, `--sbom` |
-| `terraform-validate.sh` | Runs `fmt → init → validate (+tflint)` for Terraform modules. | `TF_BACKEND_BUCKET`, `TF_BACKEND_PREFIX`, `TFLINT` |
-| `pullpush.sh` | Re-tags images listed in `images.txt` and pushes to a new registry. | `NEW_REGISTRY` inside script |
-| `scale_up_gke_nodes.sh` / `resize_gke_nodes.sh` | Adjusts GKE node-pool size via `gcloud`. | `PROJECT_ID`, `CLUSTER`, `ZONE`, `POOL`, `SIZE` |
-| `FetchingSecretsFromGCP.sh` / `secret.sh` | Fetches secrets from Secret Manager for local or CI use. | `PROJECT_ID`, `SECRET_ID`, `VERSION` |
-| `backend_nawat_pipeline.sh` | Example end-to-end CI/CD pipeline orchestration for backend services. | See inline comments for stages |
-| `MySQLBackup/dumpScript.sh` | Parameterized MySQL dump with Docker and optional uploads. | `DB_HOST`, `DB_USER`, `DB_NAME`, `OUTPUT_DIR` |
+| `k8s-health-check.sh` | Quick view of pod/cronjob/node health per namespace. | `-c` context, `-n` namespaces |
+| `ci-build.sh` | Docker build + push with optional Syft SBOM artifact. | `REGISTRY`, `DOCKERFILE`, `--sbom` |
+| `terraform-validate.sh` | `fmt → init → validate (+tflint)` wrapper for modules/envs. | `TF_BACKEND_BUCKET`, `TF_BACKEND_PREFIX`, `TFLINT` |
+| `pullpush.sh` / `pull.sh` | Re-tag images from `images.txt` into a destination registry. | `TARGET_REGISTRY`, `IMAGE_LIST` |
+| `gcrane_*.sh` / `gimage.sh` | Copy images between OCI registries using `gcrane cp`. | `SRC_REPO`, `DEST_REPO`, `IMAGES` |
+| `scale_up_gke_nodes.sh` / `resize_gke_nodes.sh` | Resize GKE node pools and trigger follow-up tasks. | `CLUSTER_NAME`, `NODE_POOL_NAME`, `ZONE`, `DESIRED_NODES` |
+| `FetchingSecretsFromGCP.sh` / `secret.sh` / `dump.sh` / `iam.sh` | Fetch, push, or grant access to Secret Manager entries. | `PROJECT_ID`, `SECRETS_TO_FETCH`, `OUTPUT_DIR`, etc. |
+| `backend_nawat_pipeline.sh` | Sample Jenkins pipeline for Maven build → image → deploy. | Update params + inline envs |
+| `MySQLBackup/dumpScript.sh` | Opinionated MySQL dump/compress/upload workflow. | `ACCESS_KEY`, `SECRET_KEY`, `CLUSTERS`, `MINIO_BUCKET` |
+
+Use this table as a checklist when wiring scripts into GitHub Actions, Jenkins, or manual ops.
 
 ---
 
-## Getting Started
+## How To Use
 
-1. **Clone Tools** – `git clone git@github.com:Vivek-0311/REPO.git`
-2. **Install CLIs** – `kubectl`, `gcloud`, `docker`, `terraform`, `syft`, `tflint`
-3. **Export Env Vars** – create a `.env` or use your CI secrets manager
-4. **Run Scripts** – `./bash-scripts/<script>.sh --help` when available
+1. **Clone/Download** this repo or copy the scripts you need.
+2. **Install prerequisites** such as `kubectl`, `gcloud`, `docker`, `terraform`, `tflint`, `syft`, `gcrane`, `mc`, `mysql`.
+3. **Export required variables**. Example: `export TARGET_REGISTRY=gcr.io/demo/artifacts`.
+4. **Dry-run locally** before adding to CI: `./bash-scripts/k8s-health-check.sh -n default`.
+5. **Document your defaults** in a `.env.example` (not committed) so teammates can follow.
 
 ---
 
-## Tips
+## Extending The Toolkit
 
-- Pair scripts with GitHub Actions or Jenkins to keep pipelines DRY.
-- Add `set -euo pipefail` to new scripts for safer error handling.
-- Document new utilities here so recruiters and teammates understand your toolkit.
+- Copy an existing script when adding a new helper and keep `set -euo pipefail`.
+- Add usage docs at the top (`usage()` or comment block) plus guardrails for missing inputs.
+- Update this README’s table whenever a new script lands or behavior changes.
+- Prefer neutral placeholders (`your-project`, `service-a`) so the toolkit stays client-agnostic.
 
-Happy automating! 🚀
+Questions or ideas? Drop a note in issues or PRs—always happy to make automation cleaner. 🚀
 
