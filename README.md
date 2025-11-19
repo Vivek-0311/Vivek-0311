@@ -44,6 +44,16 @@
 
 ---
 
+## 🧰 Bash Automation Quickstart
+
+| Script | What it covers | Why it matters |
+| --- | --- | --- |
+| `bash-scripts/k8s-health-check.sh` | Lists pod, cronjob, and node health per namespace with color-coded output. | Shows day-2 ops awareness and quick diagnosis habits. |
+| `bash-scripts/ci-build.sh` | Parameterized Docker build + push with optional SBOM via Syft. | Demonstrates secure, repeatable CI pipelines. |
+| `bash-scripts/terraform-validate.sh` | Runs fmt/init/validate (+tflint) with optional backend config. | Highlights IaC quality gates and workspace hygiene. |
+
+---
+
 ## 🎓 Certifications
 - **Google Cloud Digital Leader** (in progress)
 - **Google Cloud Associate Cloud Engineer (ACE)** (planning)

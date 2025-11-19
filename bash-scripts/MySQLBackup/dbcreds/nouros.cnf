@@ -1,0 +1,6 @@
+[client]
+user=admin
+password='Welcome#2024'
+port=3306
+host='10.241.199.110'
+

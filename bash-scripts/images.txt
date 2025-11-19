@@ -1,0 +1,11 @@
+service-a:1.0.3
+service-b:2.4.1
+service-c:2024.10.31
+service-d:1.0.0
+service-e:0.9.8
+service-f:3.2.1
+service-g:2.0.0
+service-h:1.5.6
+utility-cli:0.3.0
+worker-job:2024.11.01
+
